@@ -11,27 +11,89 @@
 </p>
 
 <p align="center">
-  <b>面向吉大师生、校友与学术科技探索者的全自动智能聚合站</b><br>
-  每天从 98 个校内外信源（吉大新闻网、校内 OA 通知、40 个学院、Nature/Science/AI 顶刊）持续采集，<br>
-  大模型独立两轮去噪打分与事件聚簇，每天早上 8:00 生成一份读得完的精编日报。<br>
-  集成 <b>MolaMaker 宇宙美学</b>、<b>Folia 6 模式音乐视效舞台</b> 与 <b>全学科顶刊工作台</b>，既给人看，也为 AI Agent 提供实时 MCP / API 数据源。
+  <img src="assets/icon.svg" width="96" height="96" alt="JLUhot 图标：金色 RSS 播报标志">
+</p>
+
+<p align="center">
+  <b>30 秒了解 JLUHOT：吉林大学 OA 通知 + 各学院通知的 RSS 聚合源。</b><br>
+  每天从 98 个校内外信源（吉大新闻网、校内 OA 通知、40 个学院、学术与 AI 前沿）持续采集，<br>
+  大模型去噪打分与事件聚簇后，每天早上 8:00 生成一份读得完的精编日报。<br>
+  给吉大师生、校友看，也给 AI Agent 用：原生支持 MCP / API / llms.txt / RSS 出口。
+</p>
+
+<p align="center">
+  <b>一步使用：</b>按下方 Docker 三步启动后，把 <code>http://localhost:3000/feed.xml</code> 订阅进你的 RSS 阅读器即可。
 </p>
 
 ---
 
 ## 目录
 
+- [📡 覆盖的 98 个精选信源](#-覆盖的-98-个精选信源)
+- [🚀 1 分钟快速启动 (Docker)](#-1-分钟快速启动-docker)
 - [✨ 核心亮点](#-核心亮点)
 - [🎨 前端美学与交互体验](#-前端美学与交互体验)
 - [🎵 Folia-Major 音乐视觉舞台](#-folia-major-音乐视觉舞台)
 - [📚 学术论文与前沿资讯工作台](#-学术论文与前沿资讯工作台)
 - [🤖 面向 AI Agent 的原生出口 (MCP & API)](#-面向-ai-agent-的原生出口-mcp--api)
 - [⚙️ 工作架构与数据流](#️-工作架构与数据流)
-- [📡 覆盖的 98 个精选信源](#-覆盖的-98-个精选信源)
-- [🚀 1 分钟快速启动 (Docker)](#-1-分钟快速启动-docker)
 - [🛠️ 技术栈一览](#️-技术栈一览)
 - [🤝 二次开发与上游框架](#-二次开发与上游框架)
 - [📄 开源协议](#-开源协议)
+
+---
+
+## 📡 覆盖的 98 个精选信源
+
+订阅入口（部署后均可在站根路径下访问）：
+
+| 订阅 | 地址 | 内容 |
+|---|---|---|
+| 精选摘要 | `/feed.xml` | 最新 50 条精选摘要，保留标题、站内阅读与原文入口 |
+| 精选全文 | `/feed/full.xml` | 与精选摘要相同的最新 50 条；仅对明确允许再分发的来源内联正文 |
+| 全部动态 | `/feed/all.xml` | 最近 7 天公开动态，按真实发布时间倒序 |
+| 日报 / 周报 / 月报 | `/feed/daily.xml`、`/feed/weekly.xml`、`/feed/monthly.xml` | 周期精编报刊单独订阅 |
+| 按分类订阅 | `/feed/category/<分类>.xml` | 按分类过滤的精选源 |
+
+完整信源清单可查阅 [`industry/sources.json`](industry/sources.json)：
+
+- **校内新闻与重大事件（3 个）**：吉大新闻网（主站头条、综合新闻、讲座论坛）。
+- **校内重要通知（OA 5 个）**：校内通知、教务处重要公告、国际交流、科研处等，由 `deploy/oa-collector.py` 自动化抓取转换。
+- **各院系官方渠道（40 个）**：计算机科学与技术学院、软件学院、人工智能学院、通信工程学院、数学学院、物理学院、白求恩第一/第二/第三临床医学院、商学与管理学院等全部主流院系。
+- **学术与 AI 前沿（50 个）**：Nature、Science、Cell 顶级期刊、arXiv 计算机科学前沿、GitHub 热门技术趋势、顶级 AI 实验室与科技媒体一手跟踪。
+
+---
+
+## 🚀 1 分钟快速启动 (Docker)
+
+### 环境要求
+- [Docker](https://docs.docker.com/get-started/get-docker/) & Docker Compose
+- [Node.js 24+](https://nodejs.org/en/download)（用于初始化配置文件）
+- 任意 OpenAI 兼容的模型 API Key（DeepSeek、千问 Qwen、智谱 GLM、Claude 等均可）
+
+### 部署步骤
+
+```bash
+# 1. 克隆本仓库
+git clone https://github.com/Mola-maker/JLUhot.git
+cd JLUhot
+
+# 2. 生成环境配置（以 DeepSeek 为例）
+node scripts/init-env.ts --llm-key <你的模型 API Key>
+
+# 3. 启动全套服务
+docker compose up -d --build
+```
+
+访问体验：
+- **网站首页**：<http://localhost:3000>
+- **音乐视觉舞台**：<http://localhost:3000/music>
+- **学术论文工作台**：<http://localhost:3000/papers>
+- **后台管理系统**：<http://localhost:3000/admin>（管理员密码见 `.env` 的 `ADMIN_PASSWORD`）
+- **Agent 接入引导**：<http://localhost:3000/agent>
+- **接口说明文档**：<http://localhost:3000/openapi-v1.json>
+
+> 💡 **本地挂载说明**：本地音频媒体文件位于 `apps/web/public/audio/`，通过 Docker Volume 以只读模式挂载至容器，无需打包进镜像，保障镜像极致轻量。
 
 ---
 
@@ -147,50 +209,6 @@ JLUHOT 不仅是为人设计的聚合阅读站，也是一个面向 AI 时代的
  │ 周期精编报刊 │    │ 毫秒歌词跳转 │    │ llms.txt/RSS │
  └──────────────┘    └──────────────┘    └──────────────┘
 ```
-
----
-
-## 📡 覆盖的 98 个精选信源
-
-完整信源清单可查阅 [`industry/sources.json`](industry/sources.json)：
-
-- **校内新闻与重大事件（3 个）**：吉大新闻网（主站头条、综合新闻、讲座论坛）。
-- **校内重要通知（OA 5 个）**：校内通知、教务处重要公告、国际交流、科研处等，由 `deploy/oa-collector.py` 自动化抓取转换。
-- **各院系官方渠道（40 个）**：计算机科学与技术学院、软件学院、人工智能学院、通信工程学院、数学学院、物理学院、白求恩第一/第二/第三临床医学院、商学与管理学院等全部主流院系。
-- **学术与 AI 前沿（50 个）**：Nature、Science、Cell 顶级期刊、arXiv 计算机科学前沿、GitHub 热门技术趋势、顶级 AI 实验室与科技媒体一手跟踪。
-
----
-
-## 🚀 1 分钟快速启动 (Docker)
-
-### 环境要求
-- [Docker](https://docs.docker.com/get-started/get-docker/) & Docker Compose
-- [Node.js 24+](https://nodejs.org/en/download)（用于初始化配置文件）
-- 任意 OpenAI 兼容的模型 API Key（DeepSeek、千问 Qwen、智谱 GLM、Claude 等均可）
-
-### 部署步骤
-
-```bash
-# 1. 克隆本仓库
-git clone https://github.com/Mola-maker/JLUhot.git
-cd JLUhot
-
-# 2. 生成环境配置（以 DeepSeek 为例）
-node scripts/init-env.ts --llm-key <你的模型 API Key>
-
-# 3. 启动全套服务
-docker compose up -d --build
-```
-
-访问体验：
-- **网站首页**：<http://localhost:3000>
-- **音乐视觉舞台**：<http://localhost:3000/music>
-- **学术论文工作台**：<http://localhost:3000/papers>
-- **后台管理系统**：<http://localhost:3000/admin>（管理员密码见 `.env` 的 `ADMIN_PASSWORD`）
-- **Agent 接入引导**：<http://localhost:3000/agent>
-- **接口说明文档**：<http://localhost:3000/openapi-v1.json>
-
-> 💡 **本地挂载说明**：本地音频媒体文件位于 `apps/web/public/audio/`，通过 Docker Volume 以只读模式挂载至容器，无需打包进镜像，保障镜像极致轻量。
 
 ---
 

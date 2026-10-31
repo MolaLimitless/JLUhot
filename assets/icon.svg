@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="JLUhot RSS icon">
+  <!-- Flat gold/amber broadcast mark: RSS waves + notice dot. Simple geometry, readable at 32px. -->
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="#F59E0B"/>
+  <!-- RSS waves, centred on the dot at bottom-left -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round">
+    <path d="M 34 68 A 24 24 0 0 1 58 94"/>
+    <path d="M 34 44 A 50 50 0 0 1 84 94"/>
+  </g>
+  <circle cx="34" cy="94" r="10" fill="#FFFFFF"/>
+  <!-- Notice dot: new-notice badge at top-right -->
+  <circle cx="96" cy="32" r="14" fill="#FFFFFF"/>
+  <circle cx="96" cy="32" r="6" fill="#B45309"/>
+</svg>
