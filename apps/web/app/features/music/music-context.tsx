@@ -147,9 +147,12 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     [ensureAudioGraph, stopSynth, volume]
   );
 
+  const playSeqRef = useRef<number>(0);
+
   // Play a specific track
   const playTrack = useCallback(
     (track: MusicTrack) => {
+      const seq = ++playSeqRef.current;
       setCurrentTrack(track);
       setCurrentTime(0);
       setDuration(track.duration || 180);
@@ -157,30 +160,20 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       stopSynth();
 
       if (audioRef.current) {
+        audioRef.current.pause();
         audioRef.current.src = track.audioUrl;
         audioRef.current.volume = volume;
         audioRef.current
           .play()
           .then(() => {
+            if (seq !== playSeqRef.current) return;
+            stopSynth();
             setIsPlaying(true);
           })
-          .catch((err) => {
+          .catch((err: unknown) => {
+            if (seq !== playSeqRef.current) return;
+            if (err instanceof DOMException && err.name === "AbortError") return;
             console.warn("Audio playback issue:", err);
-            // Fallback to online stream if local path fails
-            if (track.audioUrl.startsWith("/audio/")) {
-              const fallbackUrl = `https://api.injahow.cn/meting/?type=url&id=${track.id}`;
-              if (audioRef.current) {
-                audioRef.current.src = fallbackUrl;
-                audioRef.current
-                  .play()
-                  .then(() => setIsPlaying(true))
-                  .catch(() => {
-                    startSynth(track);
-                    setIsPlaying(true);
-                  });
-                return;
-              }
-            }
             startSynth(track);
             setIsPlaying(true);
           });
