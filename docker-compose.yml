@@ -104,6 +104,7 @@ services:
       - web
 
   folia-gateway:
+    profiles: ["folia"]
     build:
       context: ./folia-major
       dockerfile: deploy/docker/images/gateway.Dockerfile
@@ -142,6 +143,7 @@ services:
       retries: 5
 
   folia-backend:
+    profiles: ["folia"]
     build:
       context: ./folia-major
       dockerfile: deploy/docker/images/backend.Dockerfile
@@ -170,6 +172,7 @@ services:
       retries: 5
 
   folia-netease-api:
+    profiles: ["folia"]
     build:
       context: ./folia-major
       dockerfile: deploy/docker/images/netease-api.Dockerfile
@@ -195,6 +198,7 @@ services:
       retries: 5
 
   folia-kugou-api:
+    profiles: ["folia"]
     build:
       context: ./folia-major
       dockerfile: deploy/docker/images/kugou-api.Dockerfile
@@ -219,6 +223,7 @@ services:
       retries: 5
 
   folia-qq-api:
+    profiles: ["folia"]
     build:
       context: ./folia-major
       dockerfile: deploy/docker/images/qq-api.Dockerfile
@@ -245,6 +250,7 @@ services:
       retries: 5
 
   folia-sync:
+    profiles: ["folia"]
     build:
       context: ./folia-major
       dockerfile: deploy/docker/images/sync-server.Dockerfile

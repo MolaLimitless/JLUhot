@@ -32,7 +32,7 @@ export function proxyToTarget(
     up.pipe(res);
   });
   upstream.on("error", (error) => {
-    logError(error, { msg: "proxy request failed", target: target.origin, method: req.method, path });
+    logError(error, { msg: `proxy request failed (${target.origin})`, method: req.method, path });
     if (!res.headersSent) res.statusCode = 502;
     res.end("upstream unavailable");
   });
