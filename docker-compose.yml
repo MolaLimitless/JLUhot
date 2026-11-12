@@ -256,7 +256,7 @@ services:
     environment:
       PORT: "3000"
       DB_PATH: /app/data/folia-sync.db
-      SYNC_TOKEN: ${FOLIA_SYNC_TOKEN:-jluhot-folia-sync}
+      SYNC_TOKEN: ${FOLIA_SYNC_TOKEN:-}
       DASHBOARD_TOKEN: ${FOLIA_DASHBOARD_TOKEN:-}
     volumes:
       - folia-sync-data:/app/data

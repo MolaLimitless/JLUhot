@@ -15,6 +15,10 @@ import { logError } from "./app/lib/errors.server.ts";
 
 const FOLIA_GATEWAY = process.env.FOLIA_GATEWAY_URL ? new URL(process.env.FOLIA_GATEWAY_URL) : null;
 const FOLIA_SYNC = process.env.FOLIA_SYNC_URL ? new URL(process.env.FOLIA_SYNC_URL) : null;
+const SUBPATH_PROXIES = [
+  { prefix: "/folia", target: FOLIA_GATEWAY, label: "Folia" },
+  { prefix: "/folia-sync", target: FOLIA_SYNC, label: "Folia sync" },
+] as const;
 
 const PORT = Number(process.env.WEB_PORT || 3000);
 const HOST = process.env.WEB_HOST || "127.0.0.1";
@@ -220,23 +224,18 @@ async function handle(req: import("node:http").IncomingMessage, res: import("nod
   const pathname = qi >= 0 ? raw.slice(0, qi) : raw;
   const search = qi >= 0 ? raw.slice(qi) : "";
 
-  if (pathname === "/folia" || pathname === "/folia-sync") {
-    res.writeHead(302, { Location: `${pathname}/${search}`, "Cache-Control": "no-store" });
-    return res.end();
-  }
-  if (pathname.startsWith("/folia/")) {
-    if (!FOLIA_GATEWAY) {
-      res.writeHead(503, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" });
-      return res.end("Folia service not configured");
+  for (const { prefix, target, label } of SUBPATH_PROXIES) {
+    if (pathname === prefix) {
+      res.writeHead(302, { Location: `${pathname}/${search}`, "Cache-Control": "no-store" });
+      return res.end();
     }
-    return proxyToTarget(FOLIA_GATEWAY, pathname.slice("/folia".length) + search, req, res, visitorHeaders(req));
-  }
-  if (pathname.startsWith("/folia-sync/")) {
-    if (!FOLIA_SYNC) {
-      res.writeHead(503, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" });
-      return res.end("Folia sync service not configured");
+    if (pathname.startsWith(`${prefix}/`)) {
+      if (!target) {
+        res.writeHead(503, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" });
+        return res.end(`${label} service not configured`);
+      }
+      return proxyToTarget(target, pathname.slice(prefix.length) + search, req, res, visitorHeaders(req));
     }
-    return proxyToTarget(FOLIA_SYNC, pathname.slice("/folia-sync".length) + search, req, res, visitorHeaders(req));
   }
 
   const decision = resolveRedirect(pathname, search);
