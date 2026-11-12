@@ -8,12 +8,16 @@ export type { ModelPreset } from "@aihot/contracts/site-config";
 /** 具名的模型示例（每个要配自己的密钥）。用不上可以删掉。 */
 export const PRESETS: Record<string, ModelPreset> = {
   // Magpie 网关（http://192.168.1.162:3425）
-  "magpie-glm-5.3-flash": {
-    service: "magpie", model: "auto/glm-5.3-flash", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
-    reasoningTokens: 4000, jsonMode: true, vision: true,
-  },
   "magpie-deepseek-v4.1-flash": {
     service: "magpie", model: "auto/deepseek-v4.1-flash", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
+  "magpie-mimo-v2.6-flash-free": {
+    service: "magpie", model: "auto/mimo-v2.6-flash-free", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
+  "magpie-glm-5.3-flash-free": {
+    service: "magpie", model: "auto/glm-5.3-flash-free", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
     reasoningTokens: 4000, jsonMode: true, vision: true,
   },
   "magpie-forcp": {
@@ -71,16 +75,16 @@ export const PRESETS: Record<string, ModelPreset> = {
  * 例：{ score: "glm-5.3-flash-selection", groupReview: "mimo-v2.6-flash" }
  */
 export const DEFAULTS: Record<string, string> = {
-  prefilter: "magpie-glm-5.3-flash",
-  score: "magpie-glm-5.3-flash",
-  understand: "magpie-glm-5.3-flash",
-  summarize: "magpie-glm-5.3-flash",
-  wording: "magpie-glm-5.3-flash",
-  structure: "magpie-glm-5.3-flash",
-  group: "magpie-glm-5.3-flash",
-  groupReview: "magpie-glm-5.3-flash",
-  digest: "magpie-glm-5.3-flash",
-  report: "magpie-glm-5.3-flash",
-  translate: "magpie-glm-5.3-flash",
-  feedback: "magpie-glm-5.3-flash",
+  prefilter: "magpie-deepseek-v4.1-flash",
+  score: "magpie-deepseek-v4.1-flash",
+  understand: "magpie-deepseek-v4.1-flash",
+  summarize: "magpie-deepseek-v4.1-flash",
+  wording: "magpie-deepseek-v4.1-flash",
+  structure: "magpie-deepseek-v4.1-flash",
+  group: "magpie-deepseek-v4.1-flash",
+  groupReview: "magpie-deepseek-v4.1-flash",
+  digest: "magpie-deepseek-v4.1-flash",
+  report: "magpie-deepseek-v4.1-flash",
+  translate: "magpie-deepseek-v4.1-flash",
+  feedback: "magpie-deepseek-v4.1-flash",
 };
