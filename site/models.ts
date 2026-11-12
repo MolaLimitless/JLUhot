@@ -7,6 +7,27 @@ export type { ModelPreset } from "@aihot/contracts/site-config";
 
 /** 具名的模型示例（每个要配自己的密钥）。用不上可以删掉。 */
 export const PRESETS: Record<string, ModelPreset> = {
+  // Magpie 网关（http://192.168.1.162:3425）
+  "magpie-glm-5.3-flash": {
+    service: "magpie", model: "auto/glm-5.3-flash", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
+  "magpie-deepseek-v4.1-flash": {
+    service: "magpie", model: "auto/deepseek-v4.1-flash", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
+  "magpie-forcp": {
+    service: "magpie", model: "group/forcp", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
+  "magpie-auto": {
+    service: "magpie", model: "auto/auto", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
+  "magpie-smart-split": {
+    service: "magpie", model: "group/smart-split", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
   // GLM 5.3 Flash always reasons; the lowest effort keeps short structured tasks fast.
   "glm-5.3-flash": {
     service: "zhipu", model: "glm-5.3-flash", baseUrlEnv: "ZHIPU_BASE_URL", apiKeyEnv: "ZHIPU_API_KEY",
@@ -49,4 +70,17 @@ export const PRESETS: Record<string, ModelPreset> = {
  * 每一步默认用的模型（步骤见后台“模型与评测”页），值是上面的名字或 default。没写的步骤用 default。
  * 例：{ score: "glm-5.3-flash-selection", groupReview: "mimo-v2.6-flash" }
  */
-export const DEFAULTS: Record<string, string> = {};
+export const DEFAULTS: Record<string, string> = {
+  prefilter: "magpie-glm-5.3-flash",
+  score: "magpie-glm-5.3-flash",
+  understand: "magpie-glm-5.3-flash",
+  summarize: "magpie-glm-5.3-flash",
+  wording: "magpie-glm-5.3-flash",
+  structure: "magpie-glm-5.3-flash",
+  group: "magpie-glm-5.3-flash",
+  groupReview: "magpie-glm-5.3-flash",
+  digest: "magpie-glm-5.3-flash",
+  report: "magpie-glm-5.3-flash",
+  translate: "magpie-glm-5.3-flash",
+  feedback: "magpie-glm-5.3-flash",
+};

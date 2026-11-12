@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { motion, MotionConfig, useScroll, useSpring } from "motion/react";
 import { REPORT_NAMES, type ReportCitation, type ReportDetail, type ReportNavigationEntry } from "@aihot/contracts/site";
-import { SITE, withSubject } from "@aihot/site";
+import { SEO_TITLES, SITE, withSubject } from "@aihot/site";
 import { Badge } from "../../components/ui/Badge";
 import { SourceAvatar } from "../../components/ui/SourceAvatar";
 import { IconArrowLeft, IconArrowRight, IconArrowUpRight, IconChevronDown, IconSparkles } from "../../components/icons";
 import { Kicker } from "../../components/ui/Kicker";
 import { monthDay } from "@aihot/contracts/time";
 import { useEntrance } from "../../lib/hydration";
-import { dateMark, metricItems, neighbourLabel, reportPath, shortDay } from "./format";
+import { dateLine, dateMark, metricItems, neighbourLabel, reportPath, shortDay } from "./format";
 
 const keyOf = (c: ReportCitation) => c.itemId ?? c.title;
 const anchorOf = (c: ReportCitation) => c.itemId ? `r-${c.itemId}` : undefined;
@@ -160,7 +160,7 @@ export function CardPaper({ report, index }: { report: ReportDetail; index: Repo
         <motion.div aria-hidden="true" className="fixed inset-x-0 top-0 z-[75] h-[3px] origin-left bg-gradient-to-r from-accent via-sky-400 to-indigo-500" style={{ scaleX: progress }} />
         <div className="grid gap-5 @[1080px]:grid-cols-[minmax(0,1fr)_220px] @[1280px]:gap-8">
           <article className="min-w-0">
-            <Reveal id="report-start" className="scroll-mt-24">
+            <Reveal className="scroll-mt-24">
               <header className="relative isolate overflow-hidden rounded-sheet border border-line bg-surface p-5 shadow-[0_16px_55px_rgba(26,53,102,0.08)] @[640px]:p-8 @[880px]:p-10">
                 <motion.div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-28 -z-10 size-[360px] rounded-full bg-accent/10 blur-[85px]" animate={{ x: [0, -30, 0], y: [0, 24, 0], scale: [1, 1.12, 1] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }} />
                 <motion.div aria-hidden="true" className="pointer-events-none absolute -bottom-36 left-1/3 -z-10 size-[300px] rounded-full bg-sky-400/10 blur-[80px]" animate={{ x: [0, 38, 0], y: [0, -20, 0] }} transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 0.7 }} />
@@ -168,7 +168,7 @@ export function CardPaper({ report, index }: { report: ReportDetail; index: Repo
                 <div className="mt-8 flex flex-wrap items-end justify-between gap-5">
                   <div className="max-w-3xl">
                     <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent-soft/70 px-3 py-1.5 text-[11px] font-bold tracking-[0.14em] text-accent"><motion.span animate={{ rotate: [0, 12, -12, 0], scale: [1, 1.16, 1] }} transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 2 }}><IconSparkles size={14} /></motion.span>灵动日报 · 今日观察</div>
-                    <motion.h1 initial={entrance ? { opacity: 0, y: 22, filter: "blur(8px)" } : false} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }} className="mt-5 text-[32px] font-black leading-[1.18] tracking-[-0.045em] text-ink [text-wrap:balance] @[520px]:text-[44px] @[880px]:text-[56px]">{lead?.title ?? report.title}</motion.h1>
+                    <motion.h1 id="report-start" initial={entrance ? { opacity: 0, y: 22, filter: "blur(8px)" } : false} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }} className="mt-5 scroll-mt-24 text-[32px] font-black leading-[1.18] tracking-[-0.045em] text-ink [text-wrap:balance] @[520px]:text-[44px] @[880px]:text-[56px]"><span className="sr-only">{SEO_TITLES.latestReport(report.kind, dateLine(report.kind, report.key))}</span>{lead?.title ?? report.title}</motion.h1>
                     {lead?.leadParagraph && <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="mt-5 max-w-[48em] text-[15px] leading-[1.9] text-ink-2 @[640px]:text-[17px]">{lead.leadParagraph}</motion.p>}
                     {leadStory && <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2"><SourceLine item={leadStory} large />{!!leadStory.otherSources && <span className="text-[12px] text-ink-4">另有 {leadStory.otherSources} 家信源报道</span>}{leadStory.followUp && <Badge>跟进</Badge>}<OriginalLink item={leadStory} /></div>}
                   </div>
