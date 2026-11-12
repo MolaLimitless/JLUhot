@@ -8,6 +8,18 @@ export type { ModelPreset } from "@aihot/contracts/site-config";
 /** 具名的模型示例（每个要配自己的密钥）。用不上可以删掉。 */
 export const PRESETS: Record<string, ModelPreset> = {
   // Magpie 网关（http://192.168.1.162:3425）
+  "magpie-minimax-m3.1-flash-preview": {
+    service: "magpie", model: "auto/minimax-m3.1-flash-preview", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
+  "magpie-minimax-m3.1-flash": {
+    service: "magpie", model: "auto/minimax-m3.1-flash", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
+  "magpie-minimax-m3.1-flash-free": {
+    service: "magpie", model: "auto/minimax-m3.1-flash-free", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
+    reasoningTokens: 4000, jsonMode: true, vision: true,
+  },
   "magpie-deepseek-v4.1-flash": {
     service: "magpie", model: "auto/deepseek-v4.1-flash", baseUrlEnv: "MAGPIE_BASE_URL", apiKeyEnv: "MAGPIE_API_KEY",
     reasoningTokens: 4000, jsonMode: true, vision: true,
@@ -75,16 +87,16 @@ export const PRESETS: Record<string, ModelPreset> = {
  * 例：{ score: "glm-5.3-flash-selection", groupReview: "mimo-v2.6-flash" }
  */
 export const DEFAULTS: Record<string, string> = {
-  prefilter: "magpie-deepseek-v4.1-flash",
-  score: "magpie-deepseek-v4.1-flash",
-  understand: "magpie-deepseek-v4.1-flash",
-  summarize: "magpie-deepseek-v4.1-flash",
-  wording: "magpie-deepseek-v4.1-flash",
-  structure: "magpie-deepseek-v4.1-flash",
-  group: "magpie-deepseek-v4.1-flash",
-  groupReview: "magpie-deepseek-v4.1-flash",
-  digest: "magpie-deepseek-v4.1-flash",
-  report: "magpie-deepseek-v4.1-flash",
-  translate: "magpie-deepseek-v4.1-flash",
-  feedback: "magpie-deepseek-v4.1-flash",
+  prefilter: "magpie-minimax-m3.1-flash-preview",
+  score: "magpie-minimax-m3.1-flash-preview",
+  understand: "magpie-minimax-m3.1-flash-preview",
+  summarize: "magpie-minimax-m3.1-flash-preview",
+  wording: "magpie-minimax-m3.1-flash-preview",
+  structure: "magpie-minimax-m3.1-flash-preview",
+  group: "magpie-minimax-m3.1-flash-preview",
+  groupReview: "magpie-minimax-m3.1-flash-preview",
+  digest: "magpie-minimax-m3.1-flash-preview",
+  report: "magpie-minimax-m3.1-flash-preview",
+  translate: "magpie-minimax-m3.1-flash-preview",
+  feedback: "magpie-minimax-m3.1-flash-preview",
 };
