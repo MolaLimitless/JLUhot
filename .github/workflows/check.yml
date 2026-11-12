@@ -130,7 +130,7 @@ jobs:
         run: npm run test:web
       - name: Smoke check of the built site
         run: |
-          node database/migrate.ts || true
+          node scripts/migrate.ts
           node apps/api/src/main.ts > "$RUNNER_TEMP/api.log" 2>&1 &
           (cd apps/web && NODE_ENV=production exec node server.ts) > "$RUNNER_TEMP/web.log" 2>&1 &
           for i in $(seq 1 60); do curl -fsS -o /dev/null http://127.0.0.1:3000/api/health 2>/dev/null && break; sleep 1; done
