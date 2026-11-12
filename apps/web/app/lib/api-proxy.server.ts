@@ -1,11 +1,12 @@
 // Passes an api-owned request to the api process and streams the answer back; the web server and the
 // development server both use it. Only end-to-end headers cross: the hop-by-hop ones (RFC 9110 §7.6.1)
 // describe one connection, and the hop to the api is a different, pooled one.
-import { request as httpRequest, type IncomingHttpHeaders, type IncomingMessage, type OutgoingHttpHeaders, type ServerResponse } from "node:http";
+import { Agent as HttpAgent, request as httpRequest, type IncomingHttpHeaders, type IncomingMessage, type OutgoingHttpHeaders, type ServerResponse } from "node:http";
 import { API_BASE_URL } from "./api.server.ts";
 import { logError } from "./errors.server.ts";
 
 const API = new URL(API_BASE_URL);
+const PROXY_AGENT = new HttpAgent({ keepAlive: true, maxSockets: 64, maxFreeSockets: 16 });
 const HOP_BY_HOP = ["connection", "keep-alive", "proxy-connection", "te", "transfer-encoding", "upgrade"];
 
 /** The headers minus the hop-by-hop ones, including any the Connection header names. */
@@ -26,7 +27,7 @@ export function proxyToTarget(
   // A body without a length arrived chunked; it goes on chunked, since Node frames only some methods
   // that way by default (not DELETE, for one) and an unframed body would corrupt the pooled connection.
   if (req.headers["transfer-encoding"] && req.headers["content-length"] === undefined) headers["transfer-encoding"] = "chunked";
-  const upstream = httpRequest({ hostname: target.hostname, port: target.port, path, method: req.method, headers }, (up) => {
+  const upstream = httpRequest({ hostname: target.hostname, port: target.port, path, method: req.method, headers, agent: PROXY_AGENT }, (up) => {
     res.writeHead(up.statusCode ?? 502, endToEnd(up.headers));
     up.pipe(res);
   });
