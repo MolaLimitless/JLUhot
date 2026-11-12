@@ -1,0 +1,282 @@
+{
+  "groups": [
+    {
+      "key": "company",
+      "name": "部门与学院",
+      "blurb": "按学校机关、学部与学院追踪各自动态"
+    },
+    {
+      "key": "field",
+      "name": "校园方向",
+      "blurb": "按学习生活的方向深挖：教务、科研、招生、资助……"
+    },
+    {
+      "key": "genre",
+      "name": "内容形态",
+      "blurb": "按内容类型浏览：通知、讲座、荣誉、服务……"
+    }
+  ],
+  "topics": [
+    {
+      "slug": "jlu",
+      "name": "吉林大学",
+      "group": "company",
+      "entityId": "jlu",
+      "aliases": [
+        "吉大"
+      ],
+      "definition": "吉林大学整体动态：学校要闻、重要决策、发展规划与对外合作的持续追踪。"
+    },
+    {
+      "slug": "registrar",
+      "name": "教务处",
+      "group": "company",
+      "entityId": "jlu-registrar",
+      "definition": "教务处的教学安排：选课、考试、成绩、培养方案与教学通知的持续追踪。"
+    },
+    {
+      "slug": "graduate-school",
+      "name": "研究生院",
+      "group": "company",
+      "entityId": "jlu-graduate-school",
+      "definition": "研究生院的培养与学位动态：研究生招生、培养、学位授予与导师管理。"
+    },
+    {
+      "slug": "student-affairs",
+      "name": "学生工作部",
+      "group": "company",
+      "entityId": "jlu-student-affairs",
+      "definition": "学生工作部的学工动态：奖助学金、评优评先、心理健康与日常管理。"
+    },
+    {
+      "slug": "youth-league",
+      "name": "校团委",
+      "group": "company",
+      "entityId": "jlu-youth-league",
+      "definition": "校团委的组织与活动动态：社团、志愿服务、社会实践与青年活动。"
+    },
+    {
+      "slug": "library",
+      "name": "图书馆",
+      "group": "company",
+      "entityId": "jlu-library",
+      "definition": "图书馆的服务与资源动态：开馆安排、数据库资源、借阅规则与空间服务。"
+    },
+    {
+      "slug": "cst",
+      "name": "计算机科学与技术学院",
+      "group": "company",
+      "entityId": "jlu-cst",
+      "definition": "计算机科学与技术学院的院系动态：科研进展、教学工作与学术活动。"
+    },
+    {
+      "slug": "software",
+      "name": "软件学院",
+      "group": "company",
+      "entityId": "jlu-software",
+      "definition": "软件学院的院系动态：科研进展、教学工作与学术活动。"
+    },
+    {
+      "slug": "law",
+      "name": "法学院",
+      "group": "company",
+      "entityId": "jlu-law",
+      "definition": "法学院的院系动态：科研进展、学科建设工作与学术活动。"
+    },
+    {
+      "slug": "chemistry",
+      "name": "化学学院",
+      "group": "company",
+      "entityId": "jlu-chem",
+      "definition": "化学学院的院系动态：科研成果、学科建设工作与学术活动。"
+    },
+    {
+      "slug": "physics",
+      "name": "物理学院",
+      "group": "company",
+      "entityId": "jlu-physics",
+      "definition": "物理学院的院系动态：科研成果、教学工作与学术活动。"
+    },
+    {
+      "slug": "medicine",
+      "name": "白求恩医学部",
+      "group": "company",
+      "entityId": "jlu-medicine",
+      "definition": "白求恩医学部的动态：医学科研进展、临床教学与附属医院相关新闻。"
+    },
+    {
+      "slug": "automotive",
+      "name": "汽车工程学院",
+      "group": "company",
+      "entityId": "jlu-auto",
+      "definition": "汽车工程学院的院系动态：科研成果、教学工作与学术活动。"
+    },
+    {
+      "slug": "admissions",
+      "name": "招生与复试",
+      "group": "field",
+      "tags": [
+        "招生",
+        "考研/复试"
+      ],
+      "definition": "本科与研究生招生的全部动态：招生简章、政策变化、复试安排与录取进度。"
+    },
+    {
+      "slug": "baoyan",
+      "name": "保研与推免",
+      "group": "field",
+      "tags": [
+        "保研/推免"
+      ],
+      "definition": "推免保研的规则与进展：名额分配、申请条件、复试办法与拟录取公示。"
+    },
+    {
+      "slug": "scholarships",
+      "name": "奖学金与资助",
+      "group": "field",
+      "tags": [
+        "奖学金/资助"
+      ],
+      "definition": "奖助学金与资助政策：国家奖学金、学业奖学金、助学金与勤工助学的评选通知和结果。"
+    },
+    {
+      "slug": "lectures",
+      "name": "学术讲座",
+      "group": "field",
+      "tags": [
+        "学术讲座"
+      ],
+      "definition": "值得去的讲座：余瑞璜大讲堂等各系列讲座预告、名家报告与学术沙龙。"
+    },
+    {
+      "slug": "research",
+      "name": "科研成果",
+      "group": "field",
+      "tags": [
+        "论文/成果",
+        "学科建设"
+      ],
+      "definition": "吉大科研一线：论文发表、项目立项、科研平台建设与学科评估进展。"
+    },
+    {
+      "slug": "employment",
+      "name": "就业招聘",
+      "group": "field",
+      "tags": [
+        "就业/招聘"
+      ],
+      "definition": "就业与校园招聘：双选会、宣讲会、就业政策与求职指导。"
+    },
+    {
+      "slug": "registrar-affairs",
+      "name": "教务与考试",
+      "group": "field",
+      "tags": [
+        "教务",
+        "考试",
+        "选课"
+      ],
+      "definition": "教务安排与考试信息：选课、四六级与期末考试安排、成绩与学籍事项。"
+    },
+    {
+      "slug": "campus-culture",
+      "name": "校园文化",
+      "group": "field",
+      "tags": [
+        "校园文化"
+      ],
+      "definition": "校园文化生活：文艺演出、读书活动、校史校庆与文化创意。"
+    },
+    {
+      "slug": "sports",
+      "name": "体育与运动会",
+      "group": "field",
+      "tags": [
+        "体育/运动会"
+      ],
+      "definition": "校园体育：运动会、球类联赛、体育活动与体育教学动态。"
+    },
+    {
+      "slug": "cooperation",
+      "name": "对外合作",
+      "group": "field",
+      "tags": [
+        "对外合作"
+      ],
+      "definition": "校地、校企与国际合作：签约共建、联合研究院与交流的实质性进展。"
+    },
+    {
+      "slug": "alumni",
+      "name": "校友动态",
+      "group": "field",
+      "tags": [
+        "校友"
+      ],
+      "definition": "校友的消息：校友成就、校友返校、校友会活动与捐赠。"
+    },
+    {
+      "slug": "notices",
+      "name": "通知公告",
+      "group": "genre",
+      "tags": [
+        "通知公告"
+      ],
+      "definition": "需要按之行动的正式通知：教务安排、报名截止、放假、停水停电与各类公示。"
+    },
+    {
+      "slug": "headlines",
+      "name": "学校要闻",
+      "group": "genre",
+      "tags": [
+        "学校要闻"
+      ],
+      "definition": "学校层面的大事：重要会议与决策、校领导重要活动、发展规划与重大合作。"
+    },
+    {
+      "slug": "honors",
+      "name": "人物与荣誉",
+      "group": "genre",
+      "tags": [
+        "人物/荣誉"
+      ],
+      "definition": "吉大人的光荣时刻：师生获奖、荣誉表彰、学者事迹与校友风采。"
+    },
+    {
+      "slug": "activities",
+      "name": "讲座与活动",
+      "group": "genre",
+      "tags": [
+        "讲座/活动"
+      ],
+      "definition": "讲座、竞赛、招新与文体活动的预告和报道——这个星期校园里有什么可参加的。"
+    },
+    {
+      "slug": "student-clubs",
+      "name": "学生与社团",
+      "group": "genre",
+      "tags": [
+        "学生/社团"
+      ],
+      "definition": "学生工作与社团动态：院系学生工作、社团活动、志愿服务与社会实践。"
+    },
+    {
+      "slug": "services",
+      "name": "后勤与服务",
+      "group": "genre",
+      "tags": [
+        "后勤/服务",
+        "后勤/基建"
+      ],
+      "definition": "后勤与校园服务：食堂、宿舍、网络、校医院、场馆与基建维修的通知和进展。"
+    },
+    {
+      "slug": "media",
+      "name": "媒体吉大",
+      "group": "genre",
+      "tags": [
+        "媒体吉大"
+      ],
+      "definition": "校外媒体看吉大：主流媒体对吉林大学的报道与关注。"
+    }
+  ]
+}

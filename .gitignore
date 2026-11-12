@@ -1,0 +1,24 @@
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+.cache/
+.DS_Store
+.data/
+
+# Web production build
+apps/web/build/
+apps/web/.react-router/
+apps/web/public/audio/
+
+# Font package unpacked to regenerate the report nameplates (docs/customize.md)
+package/
+fontsource-noto-sans-sc-*.tgz
+
+# Python bytecode from the OA collector (deploy/)
+__pycache__/
+
+# Local scratch and tooling state
+.omc/
+*.scratch.*
