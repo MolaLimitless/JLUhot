@@ -269,7 +269,7 @@ function ItemPreview({ preview }: { preview: FeedItemSummary }) {
           <section className="mt-6 border-t border-line pt-4">
             <div className="mb-1 text-[12px] font-semibold text-ink-3">{ITEM_COPY.reasonLabel}</div>
             <p className="text-[15px] leading-[1.75] text-ink-2">
-              <mark className="hl-pink rounded px-1.5 py-0.5 text-inherit">{preview.reason}</mark>
+              <mark className="hl-pink rounded-mark px-1.5 py-0.5 text-inherit">{preview.reason}</mark>
             </p>
           </section>
         )}
@@ -582,7 +582,7 @@ function ItemView({ item, followups }: Loaded) {
             <section className="mt-6 border-t border-line pt-4 side:hidden">
               <div className="mb-1 text-[12px] font-semibold text-ink-3">{ITEM_COPY.reasonLabel}</div>
               <p className="text-[15px] leading-[1.75] text-ink-2">
-                <mark className="hl-pink rounded px-1.5 py-0.5 text-inherit">{item.reason}</mark>
+                <mark className="hl-pink rounded-mark px-1.5 py-0.5 text-inherit">{item.reason}</mark>
               </p>
             </section>
           )}

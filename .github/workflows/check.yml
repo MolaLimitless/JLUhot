@@ -90,6 +90,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends postgresql-client-17
           echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
+      - name: Build web for server tests
+        run: npm run build -w @aihot/web
       - name: Run backend tests
         run: npm test
 

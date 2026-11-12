@@ -221,16 +221,16 @@ function LegacyMusicArchive() {
                   {currentTrack.name}
                 </span>
                 {currentTrack.rank && (
-                  <span className="hl-pink shrink-0 rounded px-1.5 py-0.5 text-[11px] font-bold text-ink">
+                  <span className="hl-pink shrink-0 rounded-mark px-1.5 py-0.5 text-[11px] font-bold text-ink">
                     TOP {currentTrack.rank}
                   </span>
                 )}
                 {currentTrack.isLocalCached ? (
-                  <span className="hl-blue shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium text-ink">
+                  <span className="hl-blue shrink-0 rounded-mark px-1.5 py-0.5 text-[10px] font-medium text-ink">
                     本地原音
                   </span>
                 ) : (
-                  <span className="rounded bg-bg-sunk px-1.5 py-0.5 text-[10px] text-ink-3">
+                  <span className="rounded-mark bg-bg-sunk px-1.5 py-0.5 text-[10px] text-ink-3">
                     云端高清
                   </span>
                 )}
@@ -352,7 +352,7 @@ function LegacyMusicArchive() {
                     <div
                       key={i}
                       onClick={() => seek(l.time)}
-                      className={`cursor-pointer rounded px-2.5 py-1 text-[13px] transition-colors ${
+                      className={`cursor-pointer rounded-mark px-2.5 py-1 text-[13px] transition-colors ${
                         isCur
                           ? "hl-pink font-bold text-ink"
                           : "text-ink-3 hover:bg-bg-sunk hover:text-ink"
@@ -464,12 +464,12 @@ function LegacyMusicArchive() {
                         {t.name}
                       </span>
                       {t.isRanked && (
-                        <span className="hl-pink rounded px-1.5 py-0.2 text-[10.5px] font-medium text-ink-2">
+                        <span className="hl-pink rounded-mark px-1.5 py-0.2 text-[10.5px] font-medium text-ink-2">
                           常听
                         </span>
                       )}
                       {t.isLocalCached && (
-                        <span className="hl-blue rounded px-1.5 py-0.2 text-[10px] font-medium text-ink-2">
+                        <span className="hl-blue rounded-mark px-1.5 py-0.2 text-[10px] font-medium text-ink-2">
                           本地原音
                         </span>
                       )}
@@ -550,7 +550,7 @@ function LegacyMusicArchive() {
                     </span>
                     <span className="text-[14px] font-medium text-ink">{artist.name}</span>
                   </div>
-                  <span className="hl-blue rounded px-2 py-0.5 text-[11px] font-semibold text-ink">
+                  <span className="hl-blue rounded-mark px-2 py-0.5 text-[11px] font-semibold text-ink">
                     {artist.plays} 次播放
                   </span>
                 </div>

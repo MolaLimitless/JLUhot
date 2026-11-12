@@ -160,7 +160,7 @@ export const VisualFocusSection = memo(function VisualFocusSection({ hotCount = 
                     <div className="text-[11px] text-ink-4">每天早晨定点汇编</div>
                   </div>
                 </div>
-                <span className="hl-pink rounded px-1.5 py-0.5 text-[11px] font-medium text-ink-2">
+                <span className="hl-pink rounded-mark px-1.5 py-0.5 text-[11px] font-medium text-ink-2">
                   读得完
                 </span>
               </Link>

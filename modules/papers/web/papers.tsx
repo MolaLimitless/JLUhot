@@ -176,7 +176,7 @@ export default function PapersPage() {
         </div>
         <p className="text-[12px] text-ink-4">
           每页 <span className="num">{papers.entries.length}</span> 篇 ·{" "}
-          <span className="hl-pink rounded px-1.5 py-0.5 font-medium text-ink">每半天更新</span>
+          <span className="hl-pink rounded-mark px-1.5 py-0.5 font-medium text-ink">每半天更新</span>
         </p>
       </header>
 
