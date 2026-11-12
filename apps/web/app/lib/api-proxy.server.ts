@@ -15,19 +15,30 @@ function endToEnd(headers: IncomingHttpHeaders): IncomingHttpHeaders {
 }
 
 /** `set` replaces headers after the filter: the proxy's own facts, which a client cannot remove. */
-export function proxyToApi(req: IncomingMessage, res: ServerResponse, set: OutgoingHttpHeaders = {}): void {
+export function proxyToTarget(
+  target: URL,
+  path: string,
+  req: IncomingMessage,
+  res: ServerResponse,
+  set: OutgoingHttpHeaders = {},
+): void {
   const headers: OutgoingHttpHeaders = { ...endToEnd(req.headers), ...set };
   // A body without a length arrived chunked; it goes on chunked, since Node frames only some methods
   // that way by default (not DELETE, for one) and an unframed body would corrupt the pooled connection.
   if (req.headers["transfer-encoding"] && req.headers["content-length"] === undefined) headers["transfer-encoding"] = "chunked";
-  const upstream = httpRequest({ hostname: API.hostname, port: API.port, path: req.url, method: req.method, headers }, (up) => {
+  const upstream = httpRequest({ hostname: target.hostname, port: target.port, path, method: req.method, headers }, (up) => {
     res.writeHead(up.statusCode ?? 502, endToEnd(up.headers));
     up.pipe(res);
   });
   upstream.on("error", (error) => {
-    logError(error, { msg: "api proxy request failed", method: req.method, path: req.url });
-    res.statusCode = 502;
-    res.end("api unavailable");
+    logError(error, { msg: "proxy request failed", target: target.origin, method: req.method, path });
+    if (!res.headersSent) res.statusCode = 502;
+    res.end("upstream unavailable");
   });
   req.pipe(upstream);
+}
+
+/** `set` replaces headers after the filter: the proxy's own facts, which a client cannot remove. */
+export function proxyToApi(req: IncomingMessage, res: ServerResponse, set: OutgoingHttpHeaders = {}): void {
+  proxyToTarget(API, req.url ?? "/", req, res, set);
 }

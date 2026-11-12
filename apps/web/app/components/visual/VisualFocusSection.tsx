@@ -178,7 +178,7 @@ export const VisualFocusSection = memo(function VisualFocusSection({ hotCount = 
                     <div className="text-[13px] font-semibold text-ink group-hover:text-[#246eb6] dark:group-hover:text-[#72aee6]">
                       音乐视界 · Folia
                     </div>
-                    <div className="text-[11px] text-ink-4">网易云 300+ 专属记录</div>
+                    <div className="text-[11px] text-ink-4">Folia 全栈音乐 · 在线/本地/AI</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5">

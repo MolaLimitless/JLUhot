@@ -1,6 +1,8 @@
-import { useEffect, useRef, memo, useState } from "react";
+import { useEffect, useRef, memo, useState, useCallback } from "react";
 import type { VisualizerMode, MusicTrack } from "./types";
 import { useMusic } from "./music-context";
+import { AnimeWallpaper } from "./AnimeWallpaper";
+import { FoliaLyrics } from "./FoliaLyrics";
 
 interface FoliaCanvasProps {
   mode: VisualizerMode;
@@ -17,10 +19,14 @@ export const FoliaCanvas = memo(function FoliaCanvas({
   analyserNode,
   className = "",
 }: FoliaCanvasProps) {
-  const { lyrics, activeLyricIndex, currentTime, seek, tracks } = useMusic();
+  const { tracks } = useMusic();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const phaseRef = useRef<number>(0);
+  const wallpaperReadyRef = useRef(false);
+  const onWallpaperReady = useCallback((ready: boolean) => {
+    wallpaperReadyRef.current = ready;
+  }, []);
   const particlesRef = useRef<Array<{ x: number; y: number; r: number; vx: number; vy: number; color: string }>>([]);
 
   // Preload top album cover images for the 3D Cube / Matrix stage
@@ -107,7 +113,7 @@ export const FoliaCanvas = memo(function FoliaCanvas({
       const isDark = document.documentElement.getAttribute("data-theme") === "dark";
       ctx.clearRect(0, 0, width, height);
 
-      // Background atmospheric radial glow
+      // 壁纸就绪后只留一层薄罩，让二次元底图透出来；否则用原来的纯色氛围底。
       const bgGrad = ctx.createRadialGradient(
         width * 0.5,
         height * 0.5,
@@ -116,7 +122,11 @@ export const FoliaCanvas = memo(function FoliaCanvas({
         height * 0.5,
         Math.max(width, height) * 0.75
       );
-      if (isDark) {
+      if (wallpaperReadyRef.current) {
+        bgGrad.addColorStop(0, "rgba(8, 12, 24, 0.12)");
+        bgGrad.addColorStop(0.55, "rgba(8, 12, 24, 0.2)");
+        bgGrad.addColorStop(1, "rgba(8, 12, 24, 0.38)");
+      } else if (isDark) {
         bgGrad.addColorStop(0, "rgba(22, 38, 66, 0.96)");
         bgGrad.addColorStop(0.5, "rgba(16, 27, 46, 0.98)");
         bgGrad.addColorStop(1, "rgba(10, 16, 28, 1)");
@@ -488,88 +498,19 @@ export const FoliaCanvas = memo(function FoliaCanvas({
       // Folia-Major Inspired Synced Typography Visualizer
       // ========================================================
       else if (mode === "lyrics") {
-        const cx = width / 2;
         const cy = height / 2;
 
-        // Background subtle audio ribbons
+        // 歌词本体改由上层 FoliaLyrics 绘制（逐句填色、平滑换行）。
+        // 这里只留一条随低音起伏的光带，避免和 DOM 歌词叠两层字。
         ctx.beginPath();
         for (let x = 0; x <= width; x += 16) {
           const y = cy + Math.sin(x * 0.008 + phase) * (18 + bassEnergy * 30);
           if (x === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = isDark ? "rgba(148, 191, 233, 0.15)" : "rgba(36, 110, 182, 0.12)";
+        ctx.strokeStyle = "rgba(255, 214, 238, 0.35)";
         ctx.lineWidth = 2;
         ctx.stroke();
-
-        if (lyrics.length === 0) {
-          // Instrumental / Pure music ambient stage
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.font = "bold 20px -apple-system, BlinkMacSystemFont, sans-serif";
-          ctx.fillStyle = isDark ? "#ffffff" : "#163f70";
-          ctx.fillText(track.name, cx, cy - 14);
-
-          ctx.font = "14px -apple-system, BlinkMacSystemFont, sans-serif";
-          ctx.fillStyle = "#f69dcb";
-          ctx.fillText(`♪ 纯音乐 / 伴奏欣赏 · 沉浸声光律动 ♪`, cx, cy + 18);
-        } else {
-          const currentIdx = activeLyricIndex >= 0 ? activeLyricIndex : 0;
-          const lineHeight = 38;
-          const visibleLines = 5;
-
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-
-          for (let offset = -2; offset <= 2; offset++) {
-            const lineIdx = currentIdx + offset;
-            if (lineIdx < 0 || lineIdx >= lyrics.length) continue;
-            const line = lyrics[lineIdx];
-            if (!line) continue;
-
-            const yPos = cy + offset * lineHeight;
-            const isCurrent = offset === 0;
-
-            if (isCurrent) {
-              // Active Line: Prominent, Glowing Pink-Blue Highlighter Aura
-              const textScale = 1 + bassEnergy * 0.08;
-              ctx.save();
-              ctx.translate(cx, yPos);
-              ctx.scale(textScale, textScale);
-
-              // Fluorescent highlighter bar background
-              const textWidth = ctx.measureText(line.text).width;
-              ctx.fillStyle = isDark ? "rgba(246, 157, 203, 0.18)" : "rgba(246, 157, 203, 0.28)";
-              ctx.beginPath();
-              ctx.roundRect(-textWidth / 2 - 12, -14, textWidth + 24, 28, 6);
-              ctx.fill();
-
-              // Singing text with neon gradient
-              const textGrad = ctx.createLinearGradient(-textWidth / 2, 0, textWidth / 2, 0);
-              textGrad.addColorStop(0, "#246eb6");
-              textGrad.addColorStop(0.5, "#c24672");
-              textGrad.addColorStop(1, "#246eb6");
-
-              ctx.font = "bold 21px -apple-system, BlinkMacSystemFont, 'Noto Sans SC', sans-serif";
-              ctx.fillStyle = textGrad;
-              ctx.fillText(line.text, 0, 0);
-
-              // Translation line if present
-              if (line.translation) {
-                ctx.font = "12.5px -apple-system, BlinkMacSystemFont, sans-serif";
-                ctx.fillStyle = isDark ? "#94bfe9" : "#246eb6";
-                ctx.fillText(line.translation, 0, 22);
-              }
-              ctx.restore();
-            } else {
-              // Surrounding Lines: Fainter, floating
-              const alpha = Math.max(0.18, 0.65 - Math.abs(offset) * 0.25);
-              ctx.font = "500 15px -apple-system, BlinkMacSystemFont, sans-serif";
-              ctx.fillStyle = isDark ? `rgba(226, 232, 240, ${alpha})` : `rgba(22, 63, 112, ${alpha})`;
-              ctx.fillText(line.text, cx, yPos);
-            }
-          }
-        }
       }
 
       // ========================================================
@@ -636,11 +577,13 @@ export const FoliaCanvas = memo(function FoliaCanvas({
       window.removeEventListener("resize", onResize);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [mode, isPlaying, analyserNode, lyrics, activeLyricIndex, loadedImages]);
+  }, [mode, isPlaying, analyserNode, loadedImages]);
 
   return (
     <div className={`relative overflow-hidden rounded-panel ${className}`}>
-      <canvas ref={canvasRef} className="block size-full" />
+      <AnimeWallpaper trackId={track.id} onReady={onWallpaperReady} />
+      <canvas ref={canvasRef} className="relative z-[1] block size-full" />
+      <FoliaLyrics prominent={mode === "lyrics"} />
     </div>
   );
 });

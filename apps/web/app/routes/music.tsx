@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import type { Route } from "./+types/music";
 import { pageMeta, siteLd } from "../lib/seo";
 import type { Screen } from "../components/shell/screens";
-import { useMusic } from "../features/music/music-context";
+import { MusicProvider, useMusic } from "../features/music/music-context";
 import { FoliaCanvas } from "../features/music/FoliaCanvas";
 import type { VisualizerMode, MusicTrack } from "../features/music/types";
 import {
@@ -22,8 +22,8 @@ export const handle: Screen = { tab: "music", name: "音乐视界" };
 export function meta() {
   return pageMeta({
     path: "/music",
-    title: "音乐视界 · Folia 视觉播放器",
-    description: "基于 Folia 灵感打造的音乐全景视觉播放器，加载网易云音乐本地全部播放历史与常听排行",
+    title: "音乐视界 · Folia 全栈视觉播放器",
+    description: "集成 Folia 完整版 Web 音乐平台：在线曲库、本地文件夹、Bravais 动态歌词、AI 主题与逐词分词",
     jsonLd: siteLd(),
   });
 }
@@ -35,6 +35,72 @@ function formatTime(seconds: number): string {
 }
 
 export default function MusicPage() {
+  const [surface, setSurface] = useState<"folia" | "archive">("folia");
+
+  return (
+    <div className="pb-4 pt-1">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-control border border-line bg-surface px-3 py-2 shadow-sm">
+        <div className="flex items-center gap-2">
+          <span className="flex size-5 items-center justify-center rounded-full bg-[#f69dcb]/25 text-[#f69dcb]">
+            <IconSparkles size={12} />
+          </span>
+          <span className="text-[13px] font-semibold text-ink">音乐视界 · Folia</span>
+          <div className="ml-1 flex items-center gap-1 rounded-full border border-line bg-bg-sunk p-0.5 text-[12px]">
+            <button
+              type="button"
+              onClick={() => setSurface("folia")}
+              className={`rounded-full px-2.5 py-0.5 font-medium transition-colors ${
+                surface === "folia"
+                  ? "bg-[#246eb6] text-white dark:bg-[#72aee6] dark:text-[#111c30]"
+                  : "text-ink-3 hover:text-ink"
+              }`}
+            >
+              Folia 完整版
+            </button>
+            <button
+              type="button"
+              onClick={() => setSurface("archive")}
+              className={`rounded-full px-2.5 py-0.5 font-medium transition-colors ${
+                surface === "archive"
+                  ? "bg-[#246eb6] text-white dark:bg-[#72aee6] dark:text-[#111c30]"
+                  : "text-ink-3 hover:text-ink"
+              }`}
+            >
+              本地精选 303 首
+            </button>
+          </div>
+        </div>
+
+        <a
+          href="/folia/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-2 px-3 py-1 text-[12px] font-medium text-ink transition-colors hover:border-[#246eb6] hover:text-[#246eb6] dark:hover:text-[#72aee6]"
+        >
+          <span>独立全屏打开</span>
+          <IconExternal size={13} />
+        </a>
+      </div>
+
+      {surface === "folia" ? (
+        <div className="overflow-hidden rounded-sheet border border-line bg-[#09090b] shadow-lg">
+          <iframe
+            src="/folia/"
+            title="Folia 音乐平台"
+            allow="autoplay; fullscreen; encrypted-media; microphone; clipboard-read; clipboard-write"
+            className="block h-[calc(100dvh-150px)] min-h-[600px] w-full border-0 lg:h-[calc(100dvh-110px)]"
+          />
+        </div>
+      ) : (
+        <MusicProvider>
+          <LegacyMusicArchive />
+        </MusicProvider>
+      )}
+    </div>
+  );
+}
+
+function LegacyMusicArchive() {
   const {
     tracks,
     currentTrack,
@@ -93,7 +159,7 @@ export default function MusicPage() {
             音乐视界 · <span className="relative inline-block text-[#246eb6] dark:text-[#72aee6]">网易云全景记录</span>
           </h1>
           <p className="mt-1 text-[13px] text-ink-3">
-            已载入本地数据库 300+ 首歌曲与听歌记录 · 本地真实音源 & 动力学动效歌词
+            已载入本地数据库 300+ 首歌曲 · 本地真实音源 · 随机二次元壁纸 · 动态歌词
           </p>
         </div>
 
@@ -132,7 +198,9 @@ export default function MusicPage() {
           isPlaying={isPlaying}
           track={currentTrack}
           analyserNode={analyserNode}
-          className="h-64 w-full rounded-panel sm:h-80 md:h-96"
+          className={`w-full rounded-panel ${
+            visualMode === "lyrics" ? "h-80 sm:h-[26rem] md:h-[30rem]" : "h-64 sm:h-80 md:h-96"
+          }`}
         />
 
         {/* Floating Now Playing Overlay on Stage */}

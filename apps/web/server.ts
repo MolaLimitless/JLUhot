@@ -10,8 +10,11 @@ import { createRequestListener } from "@react-router/node";
 import type { ServerBuild } from "react-router";
 import { isApiOwned, resolveRedirect } from "@aihot/contracts/http-policy";
 import { BROWSER_MAX_SECONDS } from "./app/lib/api.server.ts";
-import { proxyToApi } from "./app/lib/api-proxy.server.ts";
+import { proxyToApi, proxyToTarget } from "./app/lib/api-proxy.server.ts";
 import { logError } from "./app/lib/errors.server.ts";
+
+const FOLIA_GATEWAY = process.env.FOLIA_GATEWAY_URL ? new URL(process.env.FOLIA_GATEWAY_URL) : null;
+const FOLIA_SYNC = process.env.FOLIA_SYNC_URL ? new URL(process.env.FOLIA_SYNC_URL) : null;
 
 const PORT = Number(process.env.WEB_PORT || 3000);
 const HOST = process.env.WEB_HOST || "127.0.0.1";
@@ -198,11 +201,43 @@ function pageResponse(req: import("node:http").IncomingMessage, res: import("nod
   }) as typeof res.writeHead;
 }
 
+function visitorHeaders(req: import("node:http").IncomingMessage) {
+  const forwarded = String(req.headers["x-forwarded-for"] ?? "").split(",").map((v) => v.trim()).filter(Boolean);
+  const client = TRUST_PROXY && forwarded.length ? forwarded[forwarded.length - 1]! : (req.socket.remoteAddress ?? "");
+  const proto = String(req.headers["x-forwarded-proto"] ?? "").split(",")[0]?.trim()
+    || (process.env.SITE_URL?.startsWith("https://") ? "https" : "http");
+  return {
+    "x-forwarded-for": client,
+    "x-real-ip": client,
+    "x-forwarded-host": String(req.headers["x-forwarded-host"] ?? req.headers.host ?? ""),
+    "x-forwarded-proto": proto,
+  };
+}
+
 async function handle(req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse) {
   const raw = req.url ?? "/";
   const qi = raw.indexOf("?");
   const pathname = qi >= 0 ? raw.slice(0, qi) : raw;
   const search = qi >= 0 ? raw.slice(qi) : "";
+
+  if (pathname === "/folia" || pathname === "/folia-sync") {
+    res.writeHead(302, { Location: `${pathname}/${search}`, "Cache-Control": "no-store" });
+    return res.end();
+  }
+  if (pathname.startsWith("/folia/")) {
+    if (!FOLIA_GATEWAY) {
+      res.writeHead(503, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" });
+      return res.end("Folia service not configured");
+    }
+    return proxyToTarget(FOLIA_GATEWAY, pathname.slice("/folia".length) + search, req, res, visitorHeaders(req));
+  }
+  if (pathname.startsWith("/folia-sync/")) {
+    if (!FOLIA_SYNC) {
+      res.writeHead(503, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" });
+      return res.end("Folia sync service not configured");
+    }
+    return proxyToTarget(FOLIA_SYNC, pathname.slice("/folia-sync".length) + search, req, res, visitorHeaders(req));
+  }
 
   const decision = resolveRedirect(pathname, search);
   if (decision) {
@@ -215,9 +250,8 @@ async function handle(req: import("node:http").IncomingMessage, res: import("nod
   if (isApiOwned(pathname)) {
     // The visitor's address, decided here: the one the trusted proxy saw (the last X-Forwarded-For
     // entry), or this connection's own. Both headers carry only that.
-    const forwarded = String(req.headers["x-forwarded-for"] ?? "").split(",").map((v) => v.trim()).filter(Boolean);
-    const client = TRUST_PROXY && forwarded.length ? forwarded[forwarded.length - 1]! : (req.socket.remoteAddress ?? "");
-    return proxyToApi(req, res, { "x-forwarded-for": client, "x-real-ip": client });
+    const { "x-forwarded-for": client, "x-real-ip": realIp } = visitorHeaders(req);
+    return proxyToApi(req, res, { "x-forwarded-for": client, "x-real-ip": realIp });
   }
 
   if ((req.method === "GET" || req.method === "HEAD") && pathname.includes(".") && (await serveStatic(pathname, req, res))) return;

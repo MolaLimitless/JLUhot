@@ -78,6 +78,8 @@ services:
       AIHOT_RELEASE: ${AIHOT_RELEASE:-}
       WEB_HOST: 0.0.0.0
       WEB_PORT: "3000"
+      FOLIA_GATEWAY_URL: http://folia-gateway:8080
+      FOLIA_SYNC_URL: http://folia-sync:3000
     ports:
       - "${PORT:-3000}:3000"
     volumes:
@@ -101,7 +103,179 @@ services:
     depends_on:
       - web
 
+  folia-gateway:
+    build:
+      context: ./folia-major
+      dockerfile: deploy/docker/images/gateway.Dockerfile
+      args:
+        VITE_PUBLIC_BASE: /folia/
+        VITE_NETEASE_API_BASE: /folia/netease
+        VITE_KUGOU_API_BASE: /folia/kugou
+        VITE_QQ_API_BASE: /folia/qq
+        VITE_AI_PROVIDER: openai
+    image: jluhot-folia-gateway
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx:uid=101,gid=101,mode=0750
+    environment:
+      FOLIA_AI_PROVIDER: openai
+      NAVIDROME_PRESET_ALLOW: private
+      FOLIA_TRUSTED_PROXIES: ""
+    depends_on:
+      folia-backend:
+        condition: service_healthy
+      folia-netease-api:
+        condition: service_healthy
+      folia-kugou-api:
+        condition: service_healthy
+      folia-qq-api:
+        condition: service_healthy
+    networks:
+      - default
+      - folia-internal
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  folia-backend:
+    build:
+      context: ./folia-major
+      dockerfile: deploy/docker/images/backend.Dockerfile
+    image: jluhot-folia-backend
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    env_file: .env
+    environment:
+      PORT: "3000"
+      AI_PROVIDER: openai
+      OPENAI_API_URL: ${MAGPIE_BASE_URL:-http://192.168.1.162:3425/v1}
+      OPENAI_API_KEY: ${MAGPIE_API_KEY}
+      OPENAI_API_MODEL: ${LLM_MODEL:-auto/minimax-m3.1-flash-preview}
+      OPENAI_API_TEMPERATURE: "0.7"
+    networks:
+      folia-internal:
+        aliases:
+          - backend
+      folia-egress: {}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  folia-netease-api:
+    build:
+      context: ./folia-major
+      dockerfile: deploy/docker/images/netease-api.Dockerfile
+    image: jluhot-folia-netease-api
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3000"
+      FOLIA_FORWARD_CLIENT_IP: "false"
+      ENABLE_GENERAL_UNBLOCK: "false"
+    networks:
+      folia-internal:
+        aliases:
+          - netease-api
+      folia-egress: {}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  folia-kugou-api:
+    build:
+      context: ./folia-major
+      dockerfile: deploy/docker/images/kugou-api.Dockerfile
+    image: jluhot-folia-kugou-api
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3000"
+      FOLIA_FORWARD_CLIENT_IP: "false"
+    networks:
+      folia-internal:
+        aliases:
+          - kugou-api
+      folia-egress: {}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  folia-qq-api:
+    build:
+      context: ./folia-major
+      dockerfile: deploy/docker/images/qq-api.Dockerfile
+    image: jluhot-folia-qq-api
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      PORT: "3000"
+      QQ_AUTH_STATE_PATH: /app/.auth-state/qq-device.json
+      QQ_SESSION_SECRET: ${FOLIA_QQ_SESSION_SECRET:-}
+    volumes:
+      - folia-qq-state:/app/.auth-state
+    networks:
+      folia-internal:
+        aliases:
+          - qq-api
+      folia-egress: {}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login/status').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  folia-sync:
+    build:
+      context: ./folia-major
+      dockerfile: deploy/docker/images/sync-server.Dockerfile
+    image: jluhot-folia-sync
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      PORT: "3000"
+      DB_PATH: /app/data/folia-sync.db
+      SYNC_TOKEN: ${FOLIA_SYNC_TOKEN:-jluhot-folia-sync}
+      DASHBOARD_TOKEN: ${FOLIA_DASHBOARD_TOKEN:-}
+    volumes:
+      - folia-sync-data:/app/data
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
 volumes:
   db: {}
   data: {}
   caddy: {}
+  folia-qq-state: {}
+  folia-sync-data: {}
+
+networks:
+  folia-internal:
+    internal: true
+  folia-egress: {}
