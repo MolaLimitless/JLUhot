@@ -124,18 +124,18 @@ test("a company topic takes the articles about it, not the ones that only mentio
 
 test("an article page says which of its tags are a topic's own", async () => {
   // A direction's or a form's tags, and the tag cards show for a company (its subject tag is never shown).
-  const id = await report({ at: hoursAgo(3), title: `吉林大学发布科研成果 ${T}`, subjects: ["jlu", "jlu-registrar"], tags: ["学术讲座", "论文/成果", "吉林大学", "教务处", "校内通知"] });
+  const id = await report({ at: hoursAgo(3), title: `Anthropic 开源智能体框架 ${T}`, subjects: ["anthropic", "openai"], tags: ["Agent", "开源/仓库", "Anthropic", "OpenAI", "框架"] });
   const res = await app.inject({ method: "GET", url: `/api/site/items/${id}` });
   const body = JSON.parse(res.body) as { tags: string[]; tagTopics: Record<string, string>; topics: Array<{ slug: string }> };
-  assert.deepEqual(body.tags, ["通知公告", "学术讲座", "论文/成果", "吉林大学", "教务处", "校内通知"]);
-  assert.deepEqual(body.tagTopics, { "通知公告": "notices", "学术讲座": "lectures", "论文/成果": "research", "吉林大学": "jlu", "教务处": "registrar" });
+  assert.deepEqual(body.tags, ["通知公告", "Agent", "开源/仓库", "Anthropic", "OpenAI", "框架"]);
+  assert.deepEqual(body.tagTopics, { "通知公告": "notices", Agent: "agent", "开源/仓库": "open-source", Anthropic: "anthropic", OpenAI: "openai" });
   // The company its title does not name is a topic of the tag, not of the article.
-  assert.deepEqual(body.topics.map((t) => t.slug), ["jlu", "lectures", "research", "notices"]);
+  assert.deepEqual(body.topics.map((t) => t.slug), ["notices", "anthropic", "agent", "open-source"]);
 });
 
 test("renaming a company topic keeps its old full name usable for search", async () => {
-  const id = await report({at: hoursAgo(2), title: `吉林大学新学期安排 ${T}`, subjects: ['jlu'], selected: false});
-  for (const query of ['吉林大学', '吉大']) {
+  const id = await report({at: hoursAgo(2), title: `Kimi 新模型上线 ${T}`, subjects: ['kimi'], selected: false});
+  for (const query of ['Kimi / 月之暗面', '月之暗面 / Kimi']) {
     const res = await app.inject({method: 'GET', url: `/api/site/pool?q=${encodeURIComponent(query)}`});
     assert.equal(res.statusCode, 200);
     assert.ok(ids(JSON.parse(res.body).items).includes(id), 'full company names must still find subject-tagged reports');
