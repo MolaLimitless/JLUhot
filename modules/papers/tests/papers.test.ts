@@ -97,7 +97,7 @@ test("pagination walks by cursor and repeats no entry", async () => {
 test("the route answers the first page with its cursor", async () => {
   const res = await app.inject({ method: "GET", url: "/api/module/papers/list" });
   assert.equal(res.statusCode, 200);
-  assert.match(String(res.headers["cache-control"]), /^public, max-age=60/);
+  assert.match(String(res.headers["cache-control"]), /^public, max-age=43200/);
   const body = res.json() as { generatedAt: string; entries: unknown[]; nextCursor: string | null };
   assert.ok(body.generatedAt);
   assert.ok(Array.isArray(body.entries));

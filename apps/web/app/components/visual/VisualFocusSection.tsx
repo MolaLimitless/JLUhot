@@ -129,7 +129,7 @@ export const VisualFocusSection = memo(function VisualFocusSection({ hotCount = 
                 className="group flex items-center justify-between rounded-control border border-line-soft bg-surface/75 p-3 transition-all duration-200 hover:border-[#94bfe9] hover:bg-surface hover:shadow-[0_4px_16px_rgba(36,110,182,0.08)]"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#c24672]/10 text-[#c24672]">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-control bg-[#c24672]/10 text-[#c24672]">
                     <IconFlame size={17} />
                   </span>
                   <div>
@@ -150,7 +150,7 @@ export const VisualFocusSection = memo(function VisualFocusSection({ hotCount = 
                 className="group flex items-center justify-between rounded-control border border-line-soft bg-surface/75 p-3 transition-all duration-200 hover:border-[#f69dcb] hover:bg-surface hover:shadow-[0_4px_16px_rgba(246,157,203,0.12)]"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#f69dcb]/15 text-[#f69dcb] dark:bg-[#f8a8d2]/20 dark:text-[#f8a8d2]">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-control bg-[#f69dcb]/15 text-[#f69dcb] dark:bg-[#f8a8d2]/20 dark:text-[#f8a8d2]">
                     <IconSparkles size={17} />
                   </span>
                   <div>
@@ -171,7 +171,7 @@ export const VisualFocusSection = memo(function VisualFocusSection({ hotCount = 
                 className="group flex items-center justify-between rounded-control border border-line-soft bg-surface/75 p-3 transition-all duration-200 hover:border-[#246eb6] hover:bg-surface hover:shadow-[0_4px_16px_rgba(36,110,182,0.12)]"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#246eb6]/10 text-[#246eb6] dark:bg-[#72aee6]/20 dark:text-[#72aee6]">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-control bg-[#246eb6]/10 text-[#246eb6] dark:bg-[#72aee6]/20 dark:text-[#72aee6]">
                     <IconMusic size={17} />
                   </span>
                   <div>

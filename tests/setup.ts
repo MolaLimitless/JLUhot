@@ -32,7 +32,7 @@ const STEP_MODELS: Record<string, [env: string, model: string]> = {
   groupReview: ["GROUP_REVIEW_MODEL", "mimo-v2.6-flash"], digest: ["DIGEST_MODEL", "deepseek-flash"], report: ["REPORT_MODEL", "deepseek-flash"],
   translate: ["TRANSLATE_MODEL", "deepseek-flash"], wording: ["WORDING_MODEL", "deepseek-flash"], feedback: ["FEEDBACK_MODEL", "qwen3.7-flash"],
 };
-for (const [step, [env, model]] of Object.entries(STEP_MODELS)) if (!DEFAULTS[step]) process.env[env] ??= model;
+for (const [, [env, model]] of Object.entries(STEP_MODELS)) process.env[env] ??= model;
 
 /**
  * Sends the calls of the named model presets to a stub: sets each one's address and key variables, which
