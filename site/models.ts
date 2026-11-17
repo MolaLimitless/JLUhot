@@ -87,16 +87,16 @@ export const PRESETS: Record<string, ModelPreset> = {
  * 例：{ score: "glm-5.3-flash-selection", groupReview: "mimo-v2.6-flash" }
  */
 export const DEFAULTS: Record<string, string> = {
-  prefilter: "magpie-minimax-m3.1-flash-preview",
-  score: "magpie-minimax-m3.1-flash-preview",
-  understand: "magpie-minimax-m3.1-flash-preview",
-  summarize: "magpie-minimax-m3.1-flash-preview",
-  wording: "magpie-minimax-m3.1-flash-preview",
-  structure: "magpie-minimax-m3.1-flash-preview",
-  group: "magpie-minimax-m3.1-flash-preview",
-  groupReview: "magpie-minimax-m3.1-flash-preview",
-  digest: "magpie-minimax-m3.1-flash-preview",
-  report: "magpie-minimax-m3.1-flash-preview",
-  translate: "magpie-minimax-m3.1-flash-preview",
-  feedback: "magpie-minimax-m3.1-flash-preview",
+  prefilter: "magpie-deepseek-v4.1-flash",
+  score: "magpie-deepseek-v4.1-flash",
+  understand: "magpie-deepseek-v4.1-flash",
+  summarize: "magpie-deepseek-v4.1-flash",
+  wording: "magpie-deepseek-v4.1-flash",
+  structure: "magpie-deepseek-v4.1-flash",
+  group: "magpie-deepseek-v4.1-flash",
+  groupReview: "magpie-deepseek-v4.1-flash",
+  digest: "magpie-deepseek-v4.1-flash",
+  report: "magpie-deepseek-v4.1-flash",
+  translate: "magpie-deepseek-v4.1-flash",
+  feedback: "magpie-deepseek-v4.1-flash",
 };
